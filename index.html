@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Nano ERP — Sua empresa, toda conectada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050B1A;
+    --bg2:#0A1730;
+    --panel:#0D1B3B;
+    --navy:#102456;
+    --blue:#3373FF;
+    --blue-soft:#6E9BFF;
+    --cyan:#22D3EE;
+    --amber:#FFC94D;
+    --whats:#25D366;
+    --ink:#F4F8FF;
+    --muted:#8FA0C4;
+    --line:rgba(255,255,255,.09);
+    --glass:rgba(255,255,255,.045);
+    --radius:20px;
+    --maxw:480px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{ font-family:'Manrope',sans-serif; line-height:1.14; letter-spacing:-0.01em; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; position:relative; padding:0 22px; }
+  img,svg{display:block;}
+  a{text-decoration:none; color:inherit;}
+  ul{list-style:none;}
+  section{position:relative;}
+
+  /* ambient dot grid, restrained */
+  .dotfield{
+    position:absolute; inset:0;
+    background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size:22px 22px;
+    mask-image:radial-gradient(ellipse 90% 70% at 50% 20%, black 40%, transparent 90%);
+    pointer-events:none;
+  }
+  .glow{
+    position:absolute; border-radius:50%; filter:blur(60px); pointer-events:none;
+  }
+
+  .reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* topbar */
+  .topbar{ background:#03060F; padding:12px 0; border-bottom:1px solid var(--line); }
+  .topbar .wrap{ display:flex; align-items:center; justify-content:center; gap:8px; }
+  .topbar span{ color:var(--blue-soft); font-size:12px; font-weight:600; letter-spacing:.02em; }
+  .topbar strong{ color:var(--amber); }
+
+  /* header */
+  .brand{ display:flex; align-items:center; gap:10px; padding:20px 0 6px; position:relative; z-index:2; }
+  .brand .dot{ width:32px; height:32px; border-radius:9px; background:#fff; display:flex; align-items:center; justify-content:center; padding:4px; }
+  .brand .dot img{ width:100%; height:100%; object-fit:contain; }
+  .brand span{ font-family:'Manrope',sans-serif; font-weight:800; font-size:15px; letter-spacing:.04em; color:var(--ink); }
+
+  /* hero */
+  .hero{ padding:18px 0 56px; overflow:hidden; }
+  .hero .glow.g1{ width:280px; height:280px; background:radial-gradient(circle, rgba(51,115,255,.45), transparent 70%); top:-60px; right:-90px; }
+  .hero .glow.g2{ width:220px; height:220px; background:radial-gradient(circle, rgba(34,211,238,.28), transparent 70%); bottom:-40px; left:-70px; }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:7px;
+    background:var(--glass); border:1px solid var(--line);
+    color:var(--blue-soft); font-size:12px; font-weight:600;
+    padding:7px 13px; border-radius:999px; margin-bottom:20px;
+    position:relative; z-index:2;
+  }
+  .eyebrow .pulse{ width:7px; height:7px; border-radius:50%; background:var(--whats);
+    box-shadow:0 0 0 0 rgba(37,211,102,.6); animation:pulse 1.8s infinite; }
+  @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(37,211,102,.55);} 70%{box-shadow:0 0 0 8px rgba(37,211,102,0);} 100%{box-shadow:0 0 0 0 rgba(37,211,102,0);} }
+
+  .hero h1{ font-size:33px; font-weight:800; margin-bottom:14px; position:relative; z-index:2; }
+  .hero h1 em{ font-style:normal; background:linear-gradient(90deg, var(--cyan), var(--blue-soft)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p{ font-size:15px; color:var(--muted); line-height:1.6; margin-bottom:26px; max-width:380px; position:relative; z-index:2; }
+
+  .badge-row{ display:flex; gap:8px; margin-bottom:28px; flex-wrap:wrap; position:relative; z-index:2; }
+  .badge{
+    display:flex; align-items:center; gap:6px;
+    background:var(--glass); border:1px solid var(--line);
+    border-radius:11px; padding:8px 11px; font-size:12px; font-weight:600; color:var(--ink);
+    backdrop-filter:blur(6px);
+  }
+  .badge svg{ width:15px; height:15px; stroke:var(--cyan); flex-shrink:0; }
+
+  .cta-btn{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    background:var(--whats); color:#fff; font-family:'Manrope',sans-serif; font-weight:800; font-size:16px;
+    padding:17px 20px; border-radius:14px;
+    box-shadow:0 14px 30px -8px rgba(37,211,102,.5);
+    width:100%; position:relative; z-index:2;
+    transition:transform .15s ease;
+  }
+  .cta-btn:active{ transform:scale(.97); }
+  .cta-sub{ text-align:center; color:var(--muted); font-size:12px; margin-top:10px; font-weight:500; position:relative; z-index:2; }
+
+  /* section head */
+  .section-head{ text-align:center; margin-bottom:26px; position:relative; z-index:2; }
+  .section-head .tag{ display:inline-block; color:var(--cyan); font-size:11.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; margin-bottom:8px; }
+  .section-head h2{ font-size:22px; font-weight:800; color:var(--ink); }
+  .section-head p{ color:var(--muted); font-size:14px; margin-top:8px; line-height:1.55; }
+
+  /* glass card base */
+  .glass{
+    background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.02));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    backdrop-filter:blur(10px);
+  }
+
+  /* segments */
+  .segments{ padding:8px 0 50px; }
+  .seg-list{ display:flex; flex-direction:column; gap:12px; position:relative; z-index:2; }
+  .seg-card{ padding:18px; display:flex; gap:14px; align-items:flex-start; }
+  .seg-icon{
+    width:44px; height:44px; border-radius:12px; flex-shrink:0;
+    background:linear-gradient(135deg, rgba(51,115,255,.25), rgba(34,211,238,.15));
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .seg-icon svg{ width:22px; height:22px; stroke:var(--cyan); fill:none; stroke-width:1.7; }
+  .seg-card h3{ font-size:16px; font-weight:700; margin-bottom:4px; color:var(--ink); }
+  .seg-card p{ font-size:13px; color:var(--muted); line-height:1.55; }
+
+  /* integrations hub */
+  .integrations{ padding:6px 0 50px; }
+  .hub-wrap{ position:relative; z-index:2; display:flex; justify-content:center; margin-bottom:8px; }
+  .hub-node{ position:absolute; }
+  .hub-node .circ{
+    width:52px; height:52px; border-radius:50%;
+    background:var(--panel); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Manrope',sans-serif; font-weight:800; font-size:11px; color:var(--ink);
+  }
+  .hub-node .lbl{ font-size:10px; color:var(--muted); text-align:center; margin-top:4px; font-weight:600; white-space:nowrap; }
+  .hub-center{
+    width:78px; height:78px; border-radius:50%;
+    background:linear-gradient(135deg, var(--blue), var(--cyan));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Manrope',sans-serif; font-weight:800; font-size:13px; color:#04101f;
+    box-shadow:0 0 0 8px rgba(51,115,255,.12), 0 10px 28px -8px rgba(34,211,238,.6);
+  }
+  .hub-line{ stroke:url(#hubgrad); stroke-width:1.4; opacity:.55; }
+
+  /* import banner */
+  .import-wrap{ padding:0 0 50px; position:relative; z-index:2; }
+  .import-banner{
+    padding:26px 22px; border-radius:22px; margin:0 22px;
+    background:linear-gradient(135deg, var(--navy), #0C1E4A 60%, var(--panel));
+    border:1px solid var(--line);
+    position:relative; overflow:hidden;
+  }
+  .import-banner .ic{
+    width:40px; height:40px; border-radius:11px; margin-bottom:14px;
+    background:rgba(34,211,238,.12); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .import-banner .ic svg{ width:20px; height:20px; stroke:var(--cyan); fill:none; stroke-width:1.7; }
+  .import-banner .tag{ color:var(--blue-soft); font-size:11.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin-bottom:8px; display:block; }
+  .import-banner h3{ font-size:18px; font-weight:800; margin-bottom:10px; max-width:300px; color:var(--ink); }
+  .import-banner p{ font-size:13.5px; color:var(--muted); line-height:1.6; }
+
+  /* fiscal */
+  .fiscal{ padding:6px 0 50px; }
+  .fiscal-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; position:relative; z-index:2; }
+  .fiscal-item{ padding:16px; text-align:center; }
+  .fiscal-item .doc{ font-family:'Manrope',sans-serif; font-weight:800; font-size:14.5px; color:var(--cyan); margin-bottom:4px; }
+  .fiscal-item p{ font-size:11.5px; color:var(--muted); font-weight:500; }
+
+  /* proof */
+  .proof{ padding:6px 0 50px; }
+  .proof-card{ padding:22px; margin-bottom:12px; }
+  .stars{ color:var(--amber); font-size:14px; margin-bottom:10px; letter-spacing:2px; }
+  .proof-card p{ font-size:14px; line-height:1.6; color:#DCE6FF; margin-bottom:14px; }
+  .proof-card .who{ font-size:12px; font-weight:700; color:var(--muted); }
+
+  /* final */
+  .final{ padding:54px 0 50px; text-align:center; overflow:hidden; }
+  .final .glow{ width:260px; height:260px; background:radial-gradient(circle, rgba(51,115,255,.4), transparent 70%); top:-60px; left:50%; transform:translateX(-50%); }
+  .final h2{ font-size:24px; font-weight:800; margin-bottom:12px; position:relative; z-index:2; }
+  .final p{ color:var(--muted); font-size:14px; margin-bottom:24px; line-height:1.55; position:relative; z-index:2; }
+
+  footer{ background:#03060F; color:#5A6B90; text-align:center; padding:22px 0 110px; font-size:11px; border-top:1px solid var(--line); }
+
+  .float-whats{
+    position:fixed; right:18px; bottom:18px; width:58px; height:58px; border-radius:50%;
+    background:var(--whats); display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 26px -6px rgba(37,211,102,.6); z-index:50;
+    animation:float-bob 2.6s ease-in-out infinite;
+  }
+  @keyframes float-bob{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
+
+  @media (min-width:520px){ .wrap{ padding:0 32px; } .import-banner{ margin:0 32px; } }
+  @media (prefers-reduced-motion: reduce){ .float-whats, .eyebrow .pulse{ animation:none; } }
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap"><span>🔥 Oferta de <strong>Instagram</strong> — vagas limitadas este mês</span></div></div>
+
+<div class="wrap"><div class="brand"><div class="dot"><img src="C:\Users\User\Documents\LP\LOGO.png" alt="Nano"></div><span>NANO</span></div></div>
+
+<section class="hero">
+  <div class="dotfield"></div>
+  <div class="glow g1"></div>
+  <div class="glow g2"></div>
+  <div class="wrap">
+    <div class="eyebrow"><span class="pulse"></span> Feito para quem não entende de sistema</div>
+    <h1>Sua empresa, <em>toda conectada</em> num só lugar.</h1>
+    <p>Loja de roupa, oficina ou restaurante: o Nano cuida das vendas, do estoque e das notas fiscais pra você vender mais e se preocupar menos.</p>
+    <div class="badge-row">
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z"/></svg>4.9 no Google</div>
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Suporte humano</div>
+    </div>
+    <a class="cta-btn" href="#" id="ctaHero">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.15a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.22 8.22 0 0 1-1.26-4.38c0-4.55 3.7-8.25 8.25-8.25 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.55-3.7 8.25-8.25 8.25zm4.52-6.17c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.04-.38-1.99-1.22-.73-.66-1.23-1.46-1.37-1.71-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43-.14-.01-.31-.01-.48-.01-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
+      Falar no WhatsApp agora
+    </a>
+    <p class="cta-sub">Resposta em poucos minutos, direto com um especialista.</p>
+  </div>
+</section>
+
+<section class="segments">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Pra sua empresa, seja qual for</span>
+      <h2>Não importa o que você vende</h2>
+    </div>
+    <ul class="seg-list">
+      <li class="seg-card glass reveal">
+        <div class="seg-icon"><svg viewBox="0 0 24 24"><path d="M8 3l4 2 4-2 4 3-3 3v13H7V9L4 6z" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+        <div><h3>Loja de Roupa</h3><p>Grade, cores e tamanhos sob controle, com sua loja online conectada direto à Nuvemshop.</p></div>
+      </li>
+      <li class="seg-card glass reveal">
+        <div class="seg-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 1 0-5.4 5.4L2 19l3 3 7.3-7.3a4 4 0 0 0 5.4-5.4z" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+        <div><h3>Oficina</h3><p>Ordem de serviço, peças e histórico do cliente organizados num só lugar, sem planilha.</p></div>
+      </li>
+      <li class="seg-card glass reveal">
+        <div class="seg-icon"><svg viewBox="0 0 24 24"><path d="M7 2v7a2 2 0 0 0 4 0V2M9 9v13M16 2c2.2 0 3.5 2.3 3.5 5.5S18.2 13 16 13v9" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><h3>Restaurante</h3><p>Comandas e pedidos do iFood, Zé Delivery, 99Food e Anota Aí, tudo caindo direto no seu sistema.</p></div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="integrations">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Já usa esses apps?</span>
+      <h2>A gente conecta tudo pra você</h2>
+      <p>Sem digitar pedido duas vezes, sem planilha separada. Tudo cai automático no Nano.</p>
+    </div>
+    <div class="hub-wrap reveal" style="width:300px; height:300px; margin:0 auto;">
+      <svg viewBox="0 0 300 300" style="position:absolute; inset:0; width:100%; height:100%;">
+        <defs><linearGradient id="hubgrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3373FF"/><stop offset="100%" stop-color="#22D3EE"/></linearGradient></defs>
+        <line class="hub-line" x1="150" y1="150" x2="150" y2="40"/>
+        <line class="hub-line" x1="150" y1="150" x2="255" y2="116"/>
+        <line class="hub-line" x1="150" y1="150" x2="215" y2="239"/>
+        <line class="hub-line" x1="150" y1="150" x2="85" y2="239"/>
+        <line class="hub-line" x1="150" y1="150" x2="45" y2="116"/>
+      </svg>
+      <div class="hub-node" style="left:150px; top:150px; transform:translate(-50%,-50%);"><div class="hub-center">NANO</div></div>
+      <div class="hub-node" style="left:150px; top:40px; transform:translate(-50%,-50%);"><div class="circ">iF</div><div class="lbl">iFood</div></div>
+      <div class="hub-node" style="left:255px; top:116px; transform:translate(-50%,-50%);"><div class="circ">ZD</div><div class="lbl">Zé Delivery</div></div>
+      <div class="hub-node" style="left:215px; top:239px; transform:translate(-50%,-50%);"><div class="circ">99</div><div class="lbl">99Food</div></div>
+      <div class="hub-node" style="left:85px; top:239px; transform:translate(-50%,-50%);"><div class="circ">AA</div><div class="lbl">Anota Aí</div></div>
+      <div class="hub-node" style="left:45px; top:116px; transform:translate(-50%,-50%);"><div class="circ">NS</div><div class="lbl">Nuvemshop</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="import-wrap">
+  <div class="import-banner glass reveal">
+    <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M21 12a9 9 0 1 1-3-6.7M21 3v5h-5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="tag">Trocar de sistema dá trabalho?</span>
+    <h3>Não com a gente.</h3>
+    <p>Clientes, produtos e histórico que você já tem cadastrado no seu sistema atual? A gente importa tudo pra você. Você começa a usar o Nano com a sua base pronta, sem digitar nada de novo.</p>
+  </div>
+</section>
+
+<section class="fiscal">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="tag">Sem dor de cabeça</span>
+      <h2>Nota fiscal direto do sistema</h2>
+      <p>Emita sem complicação, sem programa separado e sem depender de terceiros.</p>
+    </div>
+    <div class="fiscal-grid reveal">
+      <div class="fiscal-item glass"><div class="doc">NF-e</div><p>Nota fiscal eletrônica</p></div>
+      <div class="fiscal-item glass"><div class="doc">NFC-e</div><p>Cupom fiscal</p></div>
+      <div class="fiscal-item glass"><div class="doc">NFS-e</div><p>Nota de serviço</p></div>
+      <div class="fiscal-item glass"><div class="doc">SAT</div><p>Emissor fiscal</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="proof">
+  <div class="wrap">
+    <div class="section-head reveal"><span class="tag">Quem usa, recomenda</span><h2>Empresas como a sua, já organizadas</h2></div>
+    <div class="proof-card glass reveal">
+      <div class="stars">★★★★★</div>
+      <p>"Antes eu perdia tempo com planilha e caderno. Hoje vejo tudo no celular, na hora, sem complicação."</p>
+      <div class="who">Dono de oficina, cliente Nano</div>
+    </div>
+    <div class="proof-card glass reveal">
+      <div class="stars">★★★★★</div>
+      <p>"O suporte explica tudo com calma, sem termo técnico. Me senti segura pra migrar sem perder nada."</p>
+      <div class="who">Dona de loja de roupa, cliente Nano</div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="glow"></div>
+  <div class="wrap">
+    <h2>Vamos organizar<br>sua empresa agora?</h2>
+    <p>Fale agora com um especialista pelo WhatsApp e tire suas dúvidas sem compromisso.</p>
+    <a class="cta-btn" href="#" id="ctaFinal">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.15a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.22 8.22 0 0 1-1.26-4.38c0-4.55 3.7-8.25 8.25-8.25 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.55-3.7 8.25-8.25 8.25zm4.52-6.17c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.04-.38-1.99-1.22-.73-.66-1.23-1.46-1.37-1.71-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43-.14-.01-.31-.01-.48-.01-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
+      Falar no WhatsApp agora
+    </a>
+  </div>
+</section>
+
+<footer><div class="wrap">Sistemas NANO — Gestão completa para a sua empresa</div></footer>
+
+<a class="float-whats" id="ctaFloat" href="#" aria-label="Falar no WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.15a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.22 8.22 0 0 1-1.26-4.38c0-4.55 3.7-8.25 8.25-8.25 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.55-3.7 8.25-8.25 8.25zm4.52-6.17c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.25-.64.81-.78.97-.14.17-.29.19-.54.06-.25-.12-1.04-.38-1.99-1.22-.73-.66-1.23-1.46-1.37-1.71-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43-.14-.01-.31-.01-.48-.01-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08 0 1.22.89 2.4 1.02 2.57.12.17 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
+</a>
+
+<script>
+  var phone = "5519989907606";
+  var msg = "Olá, vim pela oferta do Instagram, poderia me ajudar?";
+  var link = "https://wa.me/" + phone + "?text=" + encodeURIComponent(msg);
+  ["ctaHero","ctaFinal","ctaFloat"].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.setAttribute("href", link);
+  });
+
+  var revealEls = document.querySelectorAll(".reveal");
+  if("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ entry.target.classList.add("in"); io.unobserve(entry.target); }
+      });
+    }, {threshold:0.15});
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add("in"); });
+  }
+</script>
+
+</body>
+</html>
